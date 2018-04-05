@@ -26,6 +26,15 @@ import java.util.List;
 public final class QueryUtils {
 
     private static final String LOG_TAG = "QueryUtils";
+    private static final String KEY_RESPONSE = "response";
+    private static final String KEY_RESULTS = "results";
+    private static final String KEY_TITLE = "webTitle";
+    private static final String KEY_SECTION_NAME = "sectionName";
+    private static final String KEY_PUBLICATION_DATE = "webPublicationDate";
+    private static final String KEY_AUTHOR = "author";
+    private static final String KEY_URL= "webUrl";
+
+
 
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
@@ -39,27 +48,25 @@ public final class QueryUtils {
      * Return a list of {@link NewsEntry} objects that has been built up from
      * parsing a JSON response.
      */
-    private static List<NewsEntry> extractFeatureFromJson(String newsEntriesJSON) {
+    private static List<NewsEntry> extractNewsEntriesFromJson(String newsEntriesJSON) {
 
         // Create an empty ArrayList that we can start adding newsEntries to
         ArrayList<NewsEntry> newsEntries = new ArrayList<>();
 
         try {
-
-            // TODO: Parse the response given by the SAMPLE_JSON_RESPONSE string and
             // build up a list of NewsEntry objects with the corresponding data.
             JSONObject root = new JSONObject(newsEntriesJSON);
-
-//            JSONArray features = root.getJSONArray("features");
-//            for (int i = 0; i < features.length(); i++) {
-//                JSONObject news entryObject = features.getJSONObject(i);
-//                JSONObject properties = news entryObject.getJSONObject("properties");
-//                double magnitude = properties.getDouble("mag");
-//                String location = properties.getString("place");
-//                long time = properties.getLong("time");
-//                String url = properties.getString("url");
-//                newsEntries.add(new NewsEntry(magnitude, location, time, url));
-//            }
+            JSONObject response = root.getJSONObject(KEY_RESPONSE);
+            JSONArray results = response.getJSONArray(KEY_RESULTS);
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject newsEntryObject = results.getJSONObject(i);
+                String title = newsEntryObject.optString(KEY_TITLE);
+                String sectionName = newsEntryObject.optString(KEY_SECTION_NAME);
+                String publicationDate = newsEntryObject.optString(KEY_PUBLICATION_DATE);
+                String author = newsEntryObject.optString(KEY_AUTHOR);
+                String url = newsEntryObject.optString(KEY_URL);
+                newsEntries.add(new NewsEntry(title, sectionName, author, publicationDate, url));
+            }
 
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
@@ -121,9 +128,6 @@ public final class QueryUtils {
                 urlConnection.disconnect();
             }
             if (inputStream != null) {
-                // Closing the input stream could throw an IOException, which is why
-                // the makeHttpRequest(URL url) method signature specifies than an IOException
-                // could be thrown.
                 inputStream.close();
             }
         }
@@ -151,7 +155,7 @@ public final class QueryUtils {
     /**
      * Query the guardian dataset and return a list of {@link NewsEntry} objects.
      */
-    public static List<NewsEntry> fetchNewsEntryData(String requestUrl) {
+    public static List<NewsEntry> fetchNewsData(String requestUrl) {
 
         // Create URL object
         URL url = createUrl(requestUrl);
@@ -165,7 +169,7 @@ public final class QueryUtils {
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link NewsEntry}s
-        List<NewsEntry> newsEntries = extractFeatureFromJson(jsonResponse);
+        List<NewsEntry> newsEntries = extractNewsEntriesFromJson(jsonResponse);
 
         // Return the list of {@link NewsEntry}s
         return newsEntries;
