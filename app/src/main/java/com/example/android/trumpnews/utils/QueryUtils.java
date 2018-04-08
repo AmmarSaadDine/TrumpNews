@@ -32,10 +32,9 @@ public final class QueryUtils {
     private static final String KEY_SECTION_NAME = "sectionName";
     private static final String KEY_PUBLICATION_DATE = "webPublicationDate";
     private static final String KEY_AUTHOR = "author";
-    private static final String KEY_URL= "webUrl";
+    private static final String KEY_URL = "webUrl";
 
-
-
+    
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
      * This class is only meant to hold static variables and methods, which can be accessed

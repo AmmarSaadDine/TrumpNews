@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="news_list_item_padding">16dp</dimen>
+    <dimen name="news_list_item_title_bottom_margin">16dp</dimen>
+
+    <!-- Fonts sizes -->
+    <dimen name="news_list_item_title_font">20sp</dimen>
+    <dimen name="news_list_item_subtitle_font">16sp</dimen>
+</resources>

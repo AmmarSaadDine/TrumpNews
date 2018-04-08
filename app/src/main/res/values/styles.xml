@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ListItemTitle">
+        <item name="android:textSize">@dimen/news_list_item_title_font</item>
+        <item name="android:textStyle">italic|bold</item>
+    </style>
+
+    <style name="ListItemSubtitle">
+        <item name="android:textSize">@dimen/news_list_item_subtitle_font</item>
+    </style>
 </resources>
