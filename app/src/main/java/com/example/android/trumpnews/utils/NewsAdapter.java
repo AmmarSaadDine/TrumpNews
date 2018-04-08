@@ -1,8 +1,11 @@
 package com.example.android.trumpnews.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,64 +25,89 @@ import java.util.List;
  * Created by ammar_saaddine on 04.04.18.
  */
 
-public class NewsAdapter extends ArrayAdapter<NewsEntry> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private static final DateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private static final DateFormat toFormat = new SimpleDateFormat("dd-MM-yyyy");
 
+    private Context context;
+    private List<NewsEntry> newsEntries;
 
     public NewsAdapter(@NonNull Context context, @NonNull List<NewsEntry> newsEntries) {
-        super(context, 0, newsEntries);
+        this.context = context;
+        this.newsEntries = newsEntries;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.news_entry_list_item, parent, false);
-        }
-        NewsEntry currentNewsEntry= getItem(position);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(
+                LayoutInflater.from(context).inflate(
+                R.layout.news_entry_list_item, parent, false)
+        );
+    }
 
-        TextView titleTextView = listItemView.findViewById(R.id.title);
+    @Override
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final NewsEntry currentNewsEntry = newsEntries.get(position);
+
         String title = currentNewsEntry.getTitle();
         if (title != null && !title.isEmpty()) {
-            titleTextView.setVisibility(View.VISIBLE);
-            titleTextView.setText(title);
+            holder.titleTextView.setVisibility(View.VISIBLE);
+            holder.titleTextView.setText(title);
         } else {
-            titleTextView.setVisibility(View.GONE);
+            holder.titleTextView.setVisibility(View.GONE);
         }
 
-        TextView sectionNameTextView = listItemView.findViewById(R.id.section_name);
         String sectionName = currentNewsEntry.getSectionName();
         if (sectionName != null && !sectionName.isEmpty()) {
-            sectionNameTextView.setVisibility(View.VISIBLE);
-            sectionNameTextView.setText(sectionName);
+            holder.sectionNameTextView.setVisibility(View.VISIBLE);
+            holder.sectionNameTextView.setText(sectionName);
         } else {
-            sectionNameTextView.setVisibility(View.GONE);
+            holder.sectionNameTextView.setVisibility(View.GONE);
         }
 
-        TextView authorTextView = listItemView.findViewById(R.id.author);
         String author = currentNewsEntry.getAuthor();
         if (author != null && !author.isEmpty()) {
-            authorTextView.setVisibility(View.VISIBLE);
-            authorTextView.setText(author);
+            holder.authorTextView.setVisibility(View.VISIBLE);
+            holder.authorTextView.setText(author);
         } else {
-            authorTextView.setVisibility(View.GONE);
+            holder.authorTextView.setVisibility(View.GONE);
         }
 
-        TextView publicationDateTextView = listItemView.findViewById(R.id.publication_date);
         String publicationDate = currentNewsEntry.getPublicationDate();
         String formattedDate = dateStringFrom(publicationDate);
         if (formattedDate != null && !formattedDate.isEmpty()) {
-            publicationDateTextView.setVisibility(View.VISIBLE);
-            publicationDateTextView.setText(formattedDate);
+            holder.publicationDateTextView.setVisibility(View.VISIBLE);
+            holder.publicationDateTextView.setText(formattedDate);
         } else {
-            publicationDateTextView.setVisibility(View.GONE);
+            holder.publicationDateTextView.setVisibility(View.GONE);
         }
 
-        return listItemView;
+        holder.parentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Convert the String URL into a URI object (to pass into the Intent constructor)
+                Uri newsUri = Uri.parse(currentNewsEntry.getUrl());
+
+                // Create a new intent to view the earthquake URI
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
+
+                // Send the intent to launch a new activity
+                context.startActivity(websiteIntent);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return newsEntries.size();
+    }
+
+    public void clear() {
+        final int size = newsEntries.size();
+        newsEntries.clear();
+        notifyDataSetChanged();
     }
 
     private String dateStringFrom(String originalDateString) {
@@ -89,6 +117,31 @@ public class NewsAdapter extends ArrayAdapter<NewsEntry> {
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void addAll(List<NewsEntry> newsEntries) {
+        this.newsEntries.addAll(newsEntries);
+        notifyDataSetChanged();
+    }
+
+    /// The view holder class of this Adapter
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView titleTextView;
+        private TextView sectionNameTextView;
+        private TextView authorTextView;
+        private TextView publicationDateTextView;
+        private View parentView;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.parentView = itemView;
+            this.titleTextView = itemView.findViewById(R.id.title);
+            this.sectionNameTextView = itemView.findViewById(R.id.section_name);
+            this.authorTextView = itemView.findViewById(R.id.author);
+            this.publicationDateTextView = itemView.findViewById(R.id.publication_date);
         }
     }
 }

@@ -9,6 +9,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -47,31 +49,14 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
         setContentView(R.layout.activity_news_list);
 
         // Find a reference to the {@link ListView} in the layout
-        ListView newsEntriesListView = (ListView) findViewById(R.id.list);
+        RecyclerView newsEntriesRecyclerView = findViewById(R.id.list);
 
         // Create a new adapter that takes an empty list of earthquakes as input
         mAdapter = new NewsAdapter(this, new ArrayList<NewsEntry>());
-        newsEntriesListView.setAdapter(mAdapter);
-
-        newsEntriesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Find the current news entry that was clicked on
-                NewsEntry currentNewsEntry= mAdapter.getItem(position);
-
-                // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri newsUri = Uri.parse(currentNewsEntry.getUrl());
-
-                // Create a new intent to view the earthquake URI
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
-
-                // Send the intent to launch a new activity
-                startActivity(websiteIntent);
-            }
-        });
+        newsEntriesRecyclerView.setAdapter(mAdapter);
+        newsEntriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mEmptyStateTextView = findViewById(R.id.empty_view);
-        newsEntriesListView.setEmptyView(mEmptyStateTextView);
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -96,6 +81,7 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
             loadingSpinner.setVisibility(View.GONE);
 
             // Update empty state with no connection error message
+            mEmptyStateTextView.setVisibility(View.VISIBLE);
             mEmptyStateTextView.setText(R.string.no_internet_connection);
         }
     }
@@ -120,7 +106,10 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
         // If there is a valid list of {@link NewsEntry}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (newsEntries != null && !newsEntries.isEmpty()) {
+            mEmptyStateTextView.setVisibility(View.GONE);
             mAdapter.addAll(newsEntries);
+        } else {
+            mEmptyStateTextView.setVisibility(View.VISIBLE);
         }
     }
 
