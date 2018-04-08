@@ -2,18 +2,14 @@ package com.example.android.trumpnews.activity;
 
 import android.app.LoaderManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,10 +24,13 @@ import java.util.List;
 public class NewsListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<NewsEntry>> {
 
     // Constants
+
+    /**
+     * A url that fetches 20 relevant news about Donald Trump from The Guaridan API
+     */
     private static final String TRUMP_SEARCH_REQUEST_URL =
             "https://content.guardianapis.com/search?q=trump&tag=politics/politics&page-size=20&api-key=test";
     private static final int NEWS_LOADER_ID = 1;
-    private static final String LOG_TAG = NewsListActivity.class.getName();
 
     // Variables
     /**

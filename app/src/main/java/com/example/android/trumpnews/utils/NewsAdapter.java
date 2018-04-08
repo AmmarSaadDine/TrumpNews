@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.android.trumpnews.R;
@@ -20,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ammar_saaddine on 04.04.18.
@@ -27,22 +26,26 @@ import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
-    private static final DateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    private static final DateFormat toFormat = new SimpleDateFormat("dd-MM-yyyy");
+    // Constants
+    private static final DateFormat FROM_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    private static final DateFormat TO_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
 
+    // Variables
     private Context context;
     private List<NewsEntry> newsEntries;
 
+    // Constructors
     public NewsAdapter(@NonNull Context context, @NonNull List<NewsEntry> newsEntries) {
         this.context = context;
         this.newsEntries = newsEntries;
     }
 
+    // Methods
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
                 LayoutInflater.from(context).inflate(
-                R.layout.news_entry_list_item, parent, false)
+                        R.layout.news_entry_list_item, parent, false)
         );
     }
 
@@ -105,19 +108,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     public void clear() {
-        final int size = newsEntries.size();
         newsEntries.clear();
         notifyDataSetChanged();
-    }
-
-    private String dateStringFrom(String originalDateString) {
-        try {
-            Date dateObject = fromFormat.parse(originalDateString);
-            return toFormat.format(dateObject);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public void addAll(List<NewsEntry> newsEntries) {
@@ -125,9 +117,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    /// The view holder class of this Adapter
+    private String dateStringFrom(String originalDateString) {
+        try {
+            Date dateObject = FROM_FORMAT.parse(originalDateString);
+            return TO_FORMAT.format(dateObject);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    // The view holder class of this Adapter
+
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titleTextView;
         private TextView sectionNameTextView;
@@ -135,7 +137,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         private TextView publicationDateTextView;
         private View parentView;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.parentView = itemView;
             this.titleTextView = itemView.findViewById(R.id.title);

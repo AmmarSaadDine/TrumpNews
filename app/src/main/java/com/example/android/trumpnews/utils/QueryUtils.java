@@ -23,8 +23,9 @@ import java.util.List;
 /**
  * Helper methods related to requesting and receiving news entry data from USGS.
  */
-public final class QueryUtils {
+final class QueryUtils {
 
+    // Constants
     private static final String LOG_TAG = "QueryUtils";
     private static final String KEY_RESPONSE = "response";
     private static final String KEY_RESULTS = "results";
@@ -154,7 +155,7 @@ public final class QueryUtils {
     /**
      * Query the guardian dataset and return a list of {@link NewsEntry} objects.
      */
-    public static List<NewsEntry> fetchNewsData(String requestUrl) {
+    static List<NewsEntry> fetchNewsData(String requestUrl) {
 
         // Create URL object
         URL url = createUrl(requestUrl);
@@ -167,10 +168,7 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link NewsEntry}s
-        List<NewsEntry> newsEntries = extractNewsEntriesFromJson(jsonResponse);
-
-        // Return the list of {@link NewsEntry}s
-        return newsEntries;
+        // Extract relevant fields from the JSON response and return a list of {@link NewsEntry}s
+        return extractNewsEntriesFromJson(jsonResponse);
     }
 }
