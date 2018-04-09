@@ -41,8 +41,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     // Methods
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(
                 LayoutInflater.from(context).inflate(
                         R.layout.news_entry_list_item, parent, false)
@@ -50,7 +51,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final NewsEntry currentNewsEntry = newsEntries.get(position);
 
         String title = currentNewsEntry.getTitle();
@@ -69,12 +70,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             holder.sectionNameTextView.setVisibility(View.GONE);
         }
 
-        String author = currentNewsEntry.getAuthor();
-        if (author != null && !author.isEmpty()) {
-            holder.authorTextView.setVisibility(View.VISIBLE);
-            holder.authorTextView.setText(author);
+        List<String> authors = currentNewsEntry.getAuthors();
+        if (authors != null && !authors.isEmpty()) {
+            holder.authorsTextView.setVisibility(View.VISIBLE);
+            String authorsString = context.getString(R.string.authors) + authorsStringFrom(authors);
+            holder.authorsTextView.setText(authorsString);
         } else {
-            holder.authorTextView.setVisibility(View.GONE);
+            holder.authorsTextView.setVisibility(View.GONE);
         }
 
         String publicationDate = currentNewsEntry.getPublicationDate();
@@ -127,13 +129,28 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         }
     }
 
+    private String authorsStringFrom(List<String> authors) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(authors.get(0));
+        for (int i = 1; i < authors.size(); i++) {
+            String author = authors.get(i);
+            if (!author.isEmpty()) {
+                if (builder.length() > 0) {
+                    builder.append(", ");
+                }
+                builder.append(author);
+            }
+        }
+        return builder.toString();
+    }
+
     // The view holder class of this Adapter
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titleTextView;
         private TextView sectionNameTextView;
-        private TextView authorTextView;
+        private TextView authorsTextView;
         private TextView publicationDateTextView;
         private View parentView;
 
@@ -142,7 +159,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             this.parentView = itemView;
             this.titleTextView = itemView.findViewById(R.id.title);
             this.sectionNameTextView = itemView.findViewById(R.id.section_name);
-            this.authorTextView = itemView.findViewById(R.id.author);
+            this.authorsTextView = itemView.findViewById(R.id.authors);
             this.publicationDateTextView = itemView.findViewById(R.id.publication_date);
         }
     }

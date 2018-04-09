@@ -29,7 +29,7 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
      * A url that fetches 20 relevant news about Donald Trump from The Guaridan API
      */
     private static final String TRUMP_SEARCH_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=trump&tag=politics/politics&page-size=20&api-key=test";
+            "https://content.guardianapis.com/search?q=trump&tag=politics/politics&page-size=20&api-key=test&show-tags=contributor";
     private static final int NEWS_LOADER_ID = 1;
 
     // Variables

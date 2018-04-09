@@ -1,5 +1,7 @@
 package com.example.android.trumpnews.entity;
 
+import java.util.List;
+
 /**
  * Created by ammar_saaddine on 03.04.18.
  */
@@ -10,16 +12,16 @@ public class NewsEntry {
 
     private String mTitle;
     private String mSectionName;
-    private String mAuthor;
+    private List<String> mAuthors;
     private String mPublicationDate;
     private String mUrl;
 
     // Constructors
 
-    public NewsEntry(String title, String sectionName, String author, String publicationDate, String url) {
+    public NewsEntry(String title, String sectionName, List<String> authors, String publicationDate, String url) {
         this.mTitle = title;
         this.mSectionName = sectionName;
-        this.mAuthor = author;
+        this.mAuthors = authors;
         this.mPublicationDate = publicationDate;
         this.mUrl = url;
     }
@@ -35,8 +37,8 @@ public class NewsEntry {
         return mSectionName;
     }
 
-    public String getAuthor() {
-        return mAuthor;
+    public List<String> getAuthors() {
+        return mAuthors;
     }
 
     public String getPublicationDate() {

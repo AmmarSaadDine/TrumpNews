@@ -32,9 +32,12 @@ final class QueryUtils {
     private static final String KEY_TITLE = "webTitle";
     private static final String KEY_SECTION_NAME = "sectionName";
     private static final String KEY_PUBLICATION_DATE = "webPublicationDate";
-    private static final String KEY_AUTHOR = "author";
     private static final String KEY_URL = "webUrl";
-
+    private static final String KEY_TAGS = "tags";
+    private static final String KEY_AUTHOR_TITLE = "webTitle";
+    private static final int READ_TIMEOUT = 10000;
+    private static final int REQUEST_TIMEOUT = 15000;
+    private static final String METHOD_GET = "GET";
 
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
@@ -63,9 +66,9 @@ final class QueryUtils {
                 String title = newsEntryObject.optString(KEY_TITLE);
                 String sectionName = newsEntryObject.optString(KEY_SECTION_NAME);
                 String publicationDate = newsEntryObject.optString(KEY_PUBLICATION_DATE);
-                String author = newsEntryObject.optString(KEY_AUTHOR);
+                List<String> authors = extractAuthorsFromTags(newsEntryObject.optJSONArray(KEY_TAGS));
                 String url = newsEntryObject.optString(KEY_URL);
-                newsEntries.add(new NewsEntry(title, sectionName, author, publicationDate, url));
+                newsEntries.add(new NewsEntry(title, sectionName, authors, publicationDate, url));
             }
 
         } catch (JSONException e) {
@@ -77,6 +80,30 @@ final class QueryUtils {
 
         // Return the list of newsEntries
         return newsEntries;
+    }
+
+    private static List<String> extractAuthorsFromTags(JSONArray tags) {
+        if (tags == null) {
+            return null;
+        }
+
+        List<String> authors = new ArrayList<>();
+        for (int i = 0; i < tags.length(); i++) {
+            JSONObject authorObject;
+            try {
+                authorObject = tags.getJSONObject(i);
+                String authorTitle = authorObject.getString(KEY_AUTHOR_TITLE);
+                authors.add(authorTitle);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "Problem parsing author entry", e);
+            }
+        }
+
+        if (authors.size() == 0) {
+            return null;
+        } else {
+            return authors;
+        }
     }
 
     /**
@@ -107,9 +134,9 @@ final class QueryUtils {
         InputStream inputStream = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setReadTimeout(READ_TIMEOUT /* milliseconds */);
+            urlConnection.setConnectTimeout(REQUEST_TIMEOUT /* milliseconds */);
+            urlConnection.setRequestMethod(METHOD_GET);
             urlConnection.connect();
 
             // If the request was successful (response code 200),
