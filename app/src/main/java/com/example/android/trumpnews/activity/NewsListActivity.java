@@ -4,9 +4,12 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +35,7 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
      * A url that fetches 20 relevant news about Donald Trump from The Guaridan API
      */
     private static final String TRUMP_SEARCH_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=trump&tag=politics/politics&page-size=20&api-key=test&show-tags=contributor";
+            "https://content.guardianapis.com/search";
     private static final int NEWS_LOADER_ID = 1;
 
     // Variables
@@ -90,7 +93,27 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public Loader<List<NewsEntry>> onCreateLoader(int i, Bundle bundle) {
-        return new NewsLoader(this, TRUMP_SEARCH_REQUEST_URL);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String maxEntries= sharedPrefs.getString(
+                getString(R.string.settings_max_entries_key),
+                getString(R.string.settings_max_entries_default)
+        );
+
+//        String orderBy = sharedPrefs.getString(
+//                getString(R.string.settings_order_by_key),
+//                getString(R.string.settings_order_by_default)
+//        );
+
+        Uri baseUri = Uri.parse(TRUMP_SEARCH_REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+        uriBuilder.appendQueryParameter("q", "trump");
+        uriBuilder.appendQueryParameter("page-size", maxEntries);
+        uriBuilder.appendQueryParameter("tag", "politics/politics");
+        uriBuilder.appendQueryParameter("api-key", "test");
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+
+        return new NewsLoader(this, uriBuilder.toString());
     }
 
     @Override

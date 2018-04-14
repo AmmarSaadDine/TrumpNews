@@ -4,7 +4,11 @@
     <string name="no_internet_connection">No internet connection. Please Check your the connection, and try again later.</string>
     <string name="authors">Authors:\u0020</string>
 
+    <!-- Settings -->
     <string name="settings_menu_item">Settings</string>
-
     <string name="settings_title">News Settings</string>
+
+    <string name="settings_max_entries_default" translatable="false">15</string>
+    <string name="settings_max_entries_key" translatable="false">max_entries</string>
+    <string name="settings_max_entries_label">Max amount of stories</string>
 </resources>

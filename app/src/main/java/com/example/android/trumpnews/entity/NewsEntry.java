@@ -28,7 +28,6 @@ public class NewsEntry {
 
     // Getters
 
-
     public String getTitle() {
         return mTitle;
     }
