@@ -36,7 +36,19 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
      */
     private static final String TRUMP_SEARCH_REQUEST_URL =
             "https://content.guardianapis.com/search";
+    private static final String REQUEST_KEY_QUERY = "q";
+    private static final String REQUEST_VALUE_QUERY = "trump";
+    private static final String REQUEST_KEY_PAGE_SIZE = "page-size";
+    private static final String REQUEST_KEY_TAG = "tag";
+    private static final String REQUEST_VALUE_TAG = "politics/politics";
+    private static final String REQUEST_KEY_API_KEY = "api-key";
+    private static final String REQUEST_VALUE_API_KEY = "test";
+    private static final String REQUEST_KEY_SHOW_TAGS = "show-tags";
+    private static final String REQUEST_VALUE_SHOW_TAGS = "contributor";
+    private static final String REQUEST_KEY_ORDER_BY = "order-by";
+
     private static final int NEWS_LOADER_ID = 1;
+
 
     // Variables
     /**
@@ -100,18 +112,19 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
                 getString(R.string.settings_max_entries_default)
         );
 
-//        String orderBy = sharedPrefs.getString(
-//                getString(R.string.settings_order_by_key),
-//                getString(R.string.settings_order_by_default)
-//        );
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default)
+        );
 
         Uri baseUri = Uri.parse(TRUMP_SEARCH_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
-        uriBuilder.appendQueryParameter("q", "trump");
-        uriBuilder.appendQueryParameter("page-size", maxEntries);
-        uriBuilder.appendQueryParameter("tag", "politics/politics");
-        uriBuilder.appendQueryParameter("api-key", "test");
-        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter(REQUEST_KEY_QUERY, REQUEST_VALUE_QUERY);
+        uriBuilder.appendQueryParameter(REQUEST_KEY_PAGE_SIZE, maxEntries);
+        uriBuilder.appendQueryParameter(REQUEST_KEY_TAG, REQUEST_VALUE_TAG);
+        uriBuilder.appendQueryParameter(REQUEST_KEY_API_KEY, REQUEST_VALUE_API_KEY);
+        uriBuilder.appendQueryParameter(REQUEST_KEY_SHOW_TAGS, REQUEST_VALUE_SHOW_TAGS);
+        uriBuilder.appendQueryParameter(REQUEST_KEY_ORDER_BY, orderBy);
 
         return new NewsLoader(this, uriBuilder.toString());
     }

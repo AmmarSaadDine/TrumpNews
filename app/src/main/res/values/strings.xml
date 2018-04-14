@@ -8,7 +8,25 @@
     <string name="settings_menu_item">Settings</string>
     <string name="settings_title">News Settings</string>
 
+    <!-- Strings for max entries preference -->
     <string name="settings_max_entries_default" translatable="false">15</string>
     <string name="settings_max_entries_key" translatable="false">max_entries</string>
     <string name="settings_max_entries_label">Max amount of stories</string>
+
+    <!-- Strings For order by preference -->
+    <string name="settings_order_by_label">Order By</string>
+    <string name="settings_order_by_key" translatable="false">order_by</string>
+    <string name="settings_order_by_default" translatable="false">@string/settings_order_by_relevance_value</string>
+
+    <!-- Label for order by relevance option -->
+    <string name="settings_order_by_relevance_label">Relevance</string>
+    <string name="settings_order_by_relevance_value" translatable="false">relevance</string>
+
+    <!-- Label for order by newest option -->
+    <string name="settings_order_by_most_newest_label">Newest</string>
+    <string name="settings_order_by_most_newest_value" translatable="false">newest</string>
+
+    <!-- Label for order by oldest option -->
+    <string name="settings_order_by_most_oldest_label">Oldest</string>
+    <string name="settings_order_by_most_oldest_value" translatable="false">oldest</string>
 </resources>

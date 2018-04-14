@@ -33,10 +33,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             Preference maxEntriesPref = findPreference(getString(R.string.settings_max_entries_key));
             bindPreferenceSummaryToValue(maxEntriesPref);
-/*
+
             Preference orderBy = findPreference(getString(R.string.settings_order_by_key));
             bindPreferenceSummaryToValue(orderBy);
-            */
         }
 
         @Override
